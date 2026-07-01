@@ -151,11 +151,20 @@
                 border-bottom: 1px dashed var(--border-color);
             }
 
-            /* 手機版畫廊設定：創造 Peek (露出一角) 效果 */
-            .day-gallery img {
-                height: 180px; 
-                width: 85%; /* 強制寬度，確保下一張圖會露出邊緣暗示可滑動 */
-            }
+          /* 手機版畫廊設定：創造 Peek (露出一角) 效果
+   改為「以直式照片為主」的邏輯：
+   - 拿掉強制寬度 85%（原本是造成直式照片被裁切的元兇：
+     height:180 + width:85% 會強迫圖片變成橫向比例，
+     object-fit: cover 就會把直式照片上下大量裁掉）
+   - 改用較高的 height，讓直式照片能完整呈現比例、不被限高裁掉
+   - 用 max-width 取代固定 width：橫式照片仍會被限制最大寬度，
+     保留「露出一角、暗示可滑動」的效果；直式照片則依自身比例
+     顯示，不會被硬裁 */
+.day-gallery img {
+    height: min(58vh, 420px);
+    width: auto;
+    max-width: 82%;
+}
         }
     </style>
 </head>
