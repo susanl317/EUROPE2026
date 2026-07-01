@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 歐洲自主健行計畫 | 最終完美版</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #3A4F41;
+            --primary-light: #5C7565;
+            --secondary: #51636B;
+            --bg-color: #F8F7F4;
+            --text-main: #2D312E;
+            --text-light: #6A716C;
+            --card-bg: #FFFFFF;
+            --accent: #CE9354;
+            --border-color: #E6E4DF;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        html { scroll-behavior: smooth; }
+
+        .app-container { display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Navbar & Hero (保持原樣) */
+        .navbar { background-color: var(--primary); color: white; padding: 1.2rem 2rem; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .navbar-brand { font-weight: 700; font-size: 1.25rem; letter-spacing: 1px; }
+
+        .mobile-tabs-container { display: none; position: sticky; top: 58px; z-index: 99; background: #FFFFFF; padding: 0.6rem 0 0 0; border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .mobile-tabs { display: flex; overflow-x: auto; gap: 1.2rem; padding: 0 1rem 0.6rem 1rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .mobile-tabs::-webkit-scrollbar { display: none; }
+        .mobile-tabs a { flex-shrink: 0; scroll-snap-align: start; text-decoration: none; color: var(--text-light); font-weight: 600; font-size: 0.95rem; padding: 0.3rem 0.8rem 0.5rem 0.8rem; border-bottom: 3px solid transparent; transition: all 0.25s ease; }
+        .mobile-tabs a.active { color: var(--primary); border-bottom: 3px solid var(--accent); background: rgba(206, 147, 84, 0.08); border-radius: 4px 4px 0 0; }
+
+        .hero-banner { background: linear-gradient(rgba(58, 79, 65, 0.75), rgba(58, 79, 65, 0.45)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; height: 25vh; min-height: 180px; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 2rem; }
+        .hero-banner h1 { font-size: 2.2rem; margin-bottom: 0.6rem; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        .main-layout { display: flex; max-width: 1240px; margin: 0 auto; width: 100%; padding: 2.5rem 2rem; gap: 2.5rem; }
+
+        .sidebar { flex: 0 0 260px; position: sticky; top: 90px; height: max-content; }
+        .sidebar-menu { background: var(--card-bg); border-radius: 14px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
+        .sidebar h3 { font-size: 1.05rem; color: var(--primary); margin-bottom: 1.2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.6rem; }
+        .sidebar ul { list-style: none; }
+        .sidebar a { text-decoration: none; color: var(--text-light); font-weight: 600; padding: 0.6rem 0.8rem; display: block; border-radius: 8px; transition: all 0.2s ease; margin-bottom: 0.4rem; }
+        .sidebar a:hover { background: rgba(92, 117, 101, 0.05); color: var(--primary); }
+        .sidebar a.active { color: white; background-color: var(--primary); box-shadow: 0 4px 10px rgba(58, 79, 65, 0.2); }
+
+        .content-area { flex: 1; min-width: 0; }
+        .country-section { margin-bottom: 5rem; scroll-margin-top: 130px; }
+        
+        .country-header { margin-bottom: 1.8rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); }
+        .country-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 1rem; }
+        .country-title { font-size: 1.8rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; margin: 0; }
+        
+        .collapse-btn { background-color: rgba(92, 117, 101, 0.08); color: var(--primary); border: 1px solid rgba(92, 117, 101, 0.2); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; }
+        .collapse-btn:hover { background-color: var(--primary); color: white; }
+
+        .trip-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+        .tag { background: #EAE6DF; color: var(--text-main); padding: 0.25rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; }
+        .tag-highlight { background: rgba(206, 147, 84, 0.15); color: #B36F25; }
+
+        /* 每日行程手風琴 */
+        .day-card { background: var(--card-bg); border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left: 5px solid var(--primary-light); transition: all 0.3s ease; overflow: hidden; }
+        .day-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.05); }
+        .day-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; cursor: pointer; user-select: none; }
+        .day-header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .day-date { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
+        .day-badge { background: rgba(92, 117, 101, 0.1); color: var(--primary); padding: 0.2rem 0.6rem; border-radius: 30px; font-size: 0.8rem; font-weight: 600; }
+        .toggle-arrow { font-size: 0.9rem; color: var(--text-light); transition: transform 0.3s ease; }
+        
+        .day-content { padding: 0 1.5rem 1.5rem 1.5rem; display: none; border-top: 1px solid #f0f0f0; padding-top: 1.2rem; }
+        .day-card.active { border-left-color: var(--accent); }
+        .day-card.active .day-content { display: block; }
+        .day-card.active .toggle-arrow { transform: rotate(180deg); color: var(--accent); }
+
+        /* ====================================================
+           【優化重點 1 & 2】: 重新設計比例與加入「花費」
+           電腦版: 行程(2份) | 交通(1份) | 住宿(1份) | 花費(1份) 
+           ==================================================== */
+        .info-grid { 
+            display: grid; 
+            grid-template-columns: 2fr 1fr 1fr 1fr; /* 完美的視覺配比 */
+            gap: 1.5rem; 
+        }
+        .info-item { display: flex; flex-direction: column; }
+        .info-label { font-size: 0.75rem; color: var(--text-light); font-weight: 700; margin-bottom: 0.2rem; }
+        .info-value { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
+        
+        /* 針對花費的數字做一點高光設計 */
+        .info-value.cost { color: #B36F25; font-family: monospace; font-size: 1rem; }
+
+        /* ====================================================
+           【優化重點 3】: 照片畫廊設計 (Swipeable Gallery)
+           ==================================================== */
+        .day-gallery {
+            display: flex;
+            gap: 12px;
+            margin-top: 1.5rem;
+            overflow-x: auto; /* 啟用水平滑動 */
+            scroll-snap-type: x mandatory; /* 讓滑動有吸附感 */
+            padding-bottom: 8px; /* 留一點空間給捲軸 */
+            border-top: 1px dashed var(--border-color);
+            padding-top: 1.5rem;
+        }
+        /* 自訂捲軸樣式，讓它更有設計感 */
+        .day-gallery::-webkit-scrollbar { height: 6px; }
+        .day-gallery::-webkit-scrollbar-thumb { background: rgba(92, 117, 101, 0.3); border-radius: 4px; }
+        
+        .day-gallery img {
+            height: 220px; /* 電腦版高度限制 */
+            width: auto; /* 根據高度自動計算寬度，保持比例 (橫直皆適用) */
+            object-fit: cover; /* 確保不變形 */
+            border-radius: 8px;
+            scroll-snap-align: start; /* 滑動時停靠在左側 */
+            flex-shrink: 0; /* 防止 Flexbox 擠壓圖片 */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .overall-todo { background: #FFF9F2; border: 1px solid #F0E0CE; border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; box-shadow: 0 4px 12px rgba(206, 147, 84, 0.05); }
+        .overall-todo h4 { color: var(--accent); margin-bottom: 0.8rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .overall-todo ul { padding-left: 1.5rem; color: var(--text-main); font-size: 0.95rem; line-height: 1.8; }
+        .overall-todo li { margin-bottom: 0.4rem; }
+
+        /* 手機版響應式調整 */
+        @media (max-width: 868px) {
+            .mobile-tabs-container { display: block; }
+            .hero-banner { height: 18vh; }
+            .main-layout { flex-direction: column; padding: 1.5rem 1rem; gap: 1.5rem; }
+            .sidebar { display: none; }
+            .day-card { border-radius: 10px; }
+            .day-header { padding: 1rem; }
+            .day-content { padding: 0 1rem 1rem 1rem; padding-top: 1rem; }
+            .country-section { scroll-margin-top: 110px; margin-bottom: 3rem; }
+            
+            /* 手機版的網格重排：行程滿版，交通/住宿/花費排下方 */
+            .info-grid { 
+                grid-template-columns: 1fr 1fr; /* 切成兩欄 */
+                gap: 1rem; 
+            }
+            .info-item-main { 
+                grid-column: 1 / -1; /* 讓「行程」佔據整整一列 */
+                padding-bottom: 0.5rem;
+                border-bottom: 1px dashed var(--border-color);
+            }
+
+            /* 手機版畫廊設定：創造 Peek (露出一角) 效果 */
+            .day-gallery img {
+                height: 180px; 
+                width: 85%; /* 強制寬度，確保下一張圖會露出邊緣暗示可滑動 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <nav class="navbar">
+        <div class="navbar-brand">EUROPE TREK 2026</div>
+    </nav>
+
+    <div class="mobile-tabs-container">
+        <div class="mobile-tabs" id="mobileTabs">
+            <a href="#scotland" class="active">蘇格蘭</a>
+            <a href="#iceland">冰島</a>
+            </div>
+    </div>
+
+    <header class="hero-banner">
+        <div><h1>2026 歐洲自主健行手冊</h1></div>
+    </header>
+
+    <main class="main-layout">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <h3>國家行程切換</h3>
+                <ul id="sidebarList">
+                    <li><a href="#scotland" class="active">🏴󠁧󠁢󠁳󠁣󠁴󠁿 蘇格蘭高地</a></li>
+                    <li><a href="#iceland">🇮🇸 冰島中央高地</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="content-area">
+
+            <div id="scotland" class="country-section">
+                
+                <div class="country-header">
+                    <div class="country-title-row">
+                        <h2 class="country-title">蘇格蘭 Scotland</h2>
+                        <button class="collapse-btn" onclick="collapseAll(this)">⬆️ 收合每日行程</button>
+                    </div>
+                    <div class="trip-tags">
+                        <span class="tag"># 08/14-08/20</span>
+                        <span class="tag"># 7天6夜</span>
+                        <span class="tag tag-highlight"># 高地健行、小鎮接駁與自然探索</span>
+                    </div>
+                </div>
+                
+                <div class="day-card active">
+                    <div class="day-header" onclick="toggleAccordion(this)">
+                        <div class="day-header-left"><span class="day-date">D1 ． 08/14</span><span class="day-badge">抵達與接駁</span></div>
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="day-content">
+                        <div class="info-grid">
+                            <div class="info-item info-item-main">
+                                <span class="info-label">🗺️ 行程</span>
+                                <span class="info-value">Glasgow (寄放大行李) ＞ 沿途經過 Loch Lomond ＞ Crianlarich 漫遊</span>
+                            </div>
+                            <div class="info-item"><span class="info-label">🚌 交通</span><span class="info-value">巴士 (Citilink)</span></div>
+                            <div class="info-item"><span class="info-label">🏨 住宿</span><span class="info-value">Crianlarich YHA</span></div>
+                            <div class="info-item"><span class="info-label">💰 花費 (預估)</span><span class="info-value cost">NT$ 3,276</span></div>
+                        </div>
+
+                        <div class="day-gallery">
+                            <img src="https://madsillustration.co.uk/cdn/shop/files/il_fullxfull.3421336888_17ja_8524316a-c5e4-40f2-b20d-7a3caaf7d855.jpg?v=1722526130" alt="高地插畫" loading="lazy">
+                            <img src="https://www.macsadventure.com/media/nnnpu0l5/scotland_westhighlandway_us-uk_map.jpg?width=1150&height=803&v=1dbce2fb7025610" alt="健行路線圖" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-card">
+                    <div class="day-header" onclick="toggleAccordion(this)">
+                        <div class="day-header-left"><span class="day-date">D2 ． 08/15</span><span class="day-badge">高地徒步</span></div>
+                        <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="day-content">
+                        <div class="info-grid">
+                            <div class="info-item info-item-main"><span class="info-label">🗺️ 行程</span><span class="info-value">Crianlarich ＞ Bridge of Orchy ➔ Kingshouse</span></div>
+                            <div class="info-item"><span class="info-label">🚌 交通</span><span class="info-value">徒步 (約19km)</span></div>
+                            <div class="info-item"><span class="info-label">🏨 住宿</span><span class="info-value">Kingshouse Bunk</span></div>
+                            <div class="info-item"><span class="info-label">💰 花費 (預估)</span><span class="info-value cost">NT$ 2,278</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overall-todo">
+                    <h4>📋 蘇格蘭行前代辦與建議事項</h4>
+                    <ul>
+                        <li><strong>App 準備：</strong>下載更新 <b>YAMAP (Premium)</b> 蘇格蘭高地離線圖資、下載 <b>Citilink</b> 交通 App 掌握巴士動態。</li>
+                        <li><strong>餐飲確認：</strong>提前致信確認沿途 YHA 與山屋是否提供 / 可預訂素食餐點 (Vegetarian Options)。</li>
+                        <li><strong>待查事項：</strong>行前確認 Glasgow 行李寄放位置及防蟲網頭套 (Midget 噴霧) 購買地點。</li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+<script>
+    function toggleAccordion(header) {
+        const card = header.parentElement;
+        card.classList.toggle('active');
+    }
+
+    function collapseAll(button) {
+        const currentSection = button.closest('.country-section');
+        const activeCards = currentSection.querySelectorAll('.day-card.active');
+        activeCards.forEach(card => {
+            card.classList.remove('active');
+        });
+    }
+</script>
+
+</body>
+</html>
