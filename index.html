@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 歐洲自主健行手冊</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #3A4F41;
+            --primary-light: #5C7565;
+            --secondary: #51636B;
+            --bg-color: #F8F7F4;
+            --text-main: #2D312E;
+            --text-light: #6A716C;
+            --card-bg: #FFFFFF;
+            --accent: #CE9354;
+            --border-color: #E6E4DF;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: var(--text-main); background-color: var(--bg-color); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+        html { scroll-behavior: smooth; }
+        .app-container { display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* NAV */
+        .navbar { background-color: var(--primary); color: white; padding: 1.2rem 2rem; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .navbar-brand { font-weight: 700; font-size: 1.25rem; letter-spacing: 1px; }
+
+        /* MOBILE TABS */
+        .mobile-tabs-container { display: none; position: sticky; top: 58px; z-index: 99; background: #FFFFFF; padding: 0.6rem 0 0 0; border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .mobile-tabs { display: flex; overflow-x: auto; gap: 0.4rem; padding: 0 1rem 0.6rem 1rem; -webkit-overflow-scrolling: touch; }
+        .mobile-tabs::-webkit-scrollbar { display: none; }
+        .mobile-tabs a { flex-shrink: 0; text-decoration: none; color: var(--text-light); font-weight: 600; font-size: 0.9rem; padding: 0.3rem 0.75rem 0.5rem; border-bottom: 3px solid transparent; transition: all 0.25s ease; white-space: nowrap; }
+        .mobile-tabs a.active { color: var(--primary); border-bottom: 3px solid var(--accent); background: rgba(206,147,84,0.08); border-radius: 4px 4px 0 0; }
+
+        /* HERO */
+        .hero-banner { background: linear-gradient(rgba(58,79,65,0.75), rgba(58,79,65,0.45)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; height: 25vh; min-height: 180px; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 2rem; }
+        .hero-banner h1 { font-size: 2.2rem; margin-bottom: 0.6rem; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .hero-sub { font-size: 1rem; opacity: 0.85; letter-spacing: 1px; }
+
+        /* LAYOUT */
+        .main-layout { display: flex; max-width: 1240px; margin: 0 auto; width: 100%; padding: 2.5rem 2rem; gap: 2.5rem; }
+
+        /* SIDEBAR */
+        .sidebar { flex: 0 0 250px; position: sticky; top: 90px; height: max-content; }
+        .sidebar-menu { background: var(--card-bg); border-radius: 14px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
+        .sidebar h3 { font-size: 1.05rem; color: var(--primary); margin-bottom: 1.2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.6rem; }
+        .sidebar ul { list-style: none; }
+        .sidebar a { text-decoration: none; color: var(--text-light); font-weight: 600; padding: 0.6rem 0.8rem; display: block; border-radius: 8px; transition: all 0.2s ease; margin-bottom: 0.3rem; font-size: 0.95rem; }
+        .sidebar a:hover { background: rgba(92,117,101,0.05); color: var(--primary); }
+        .sidebar a.active { color: white; background-color: var(--primary); box-shadow: 0 4px 10px rgba(58,79,65,0.2); }
+
+        /* CONTENT */
+        .content-area { flex: 1; min-width: 0; }
+        .country-section { margin-bottom: 5rem; scroll-margin-top: 130px; }
+
+        .country-header { margin-bottom: 1.8rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); }
+        .country-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.8rem; }
+        .country-title { font-size: 1.8rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; margin: 0; }
+
+        .collapse-btn { background-color: rgba(92,117,101,0.08); color: var(--primary); border: 1px solid rgba(92,117,101,0.2); padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .collapse-btn:hover { background-color: var(--primary); color: white; }
+
+        .trip-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+        .tag { background: #EAE6DF; color: var(--text-main); padding: 0.25rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .tag-highlight { background: rgba(206,147,84,0.15); color: #B36F25; }
+
+        /* DAY CARDS */
+        .day-card { background: var(--card-bg); border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left: 5px solid var(--primary-light); overflow: hidden; transition: all 0.3s ease; }
+        .day-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.05); }
+        .day-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; cursor: pointer; user-select: none; }
+        .day-header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .day-date { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
+        .day-badge { background: rgba(92,117,101,0.1); color: var(--primary); padding: 0.2rem 0.65rem; border-radius: 30px; font-size: 0.8rem; font-weight: 600; }
+        .toggle-arrow { font-size: 0.9rem; color: var(--text-light); transition: transform 0.3s ease; flex-shrink: 0; }
+
+        .day-content { display: none; padding: 0 1.5rem 1.5rem; border-top: 1px solid #f0efec; }
+        .day-content-inner { padding-top: 1.2rem; }
+        .day-card.active { border-left-color: var(--accent); }
+        .day-card.active .day-content { display: block; }
+        .day-card.active .toggle-arrow { transform: rotate(180deg); color: var(--accent); }
+
+        /* INFO GRID */
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1.2rem 1.5rem; }
+        .info-item { display: flex; flex-direction: column; }
+        .info-item-main { grid-column: 1 / 2; }
+        .info-label { font-size: 0.72rem; color: var(--text-light); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 0.25rem; text-transform: uppercase; }
+        .info-value { font-size: 0.93rem; font-weight: 600; color: var(--text-main); }
+        .info-sub { font-size: 0.8rem; color: var(--text-light); font-weight: 400; margin-top: 0.2rem; line-height: 1.4; }
+        .info-value.cost { color: #B36F25; font-size: 1rem; font-weight: 700; }
+        .plan-note { font-size: 0.78rem; color: var(--secondary); font-style: italic; margin-top: 0.35rem; background: rgba(81,99,107,0.07); padding: 0.3rem 0.6rem; border-radius: 6px; border-left: 2px solid var(--secondary); }
+
+        /* GALLERY */
+        .day-gallery { display: flex; gap: 12px; margin-top: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; border-top: 1px dashed var(--border-color); padding-top: 1.2rem; -webkit-overflow-scrolling: touch; }
+        .day-gallery::-webkit-scrollbar { height: 5px; }
+        .day-gallery::-webkit-scrollbar-thumb { background: rgba(92,117,101,0.3); border-radius: 4px; }
+        .day-gallery img { height: 220px; width: auto; object-fit: cover; border-radius: 8px; scroll-snap-align: start; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.08); border: 1px solid var(--border-color); }
+
+        /* TODO */
+        .overall-todo { background: #FFF9F2; border: 1px solid #F0E0CE; border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+        .overall-todo h4 { color: var(--accent); margin-bottom: 0.8rem; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
+        .overall-todo ul { padding-left: 1.4rem; color: var(--text-main); font-size: 0.92rem; line-height: 1.9; }
+        .overall-todo li { margin-bottom: 0.3rem; }
+        .overall-todo a { color: var(--accent); }
+
+        /* MOBILE */
+        @media (max-width: 868px) {
+            .mobile-tabs-container { display: block; }
+            .hero-banner { height: 18vh; min-height: 140px; }
+            .hero-banner h1 { font-size: 1.5rem; letter-spacing: 1px; }
+            .hero-sub { font-size: 0.85rem; }
+            .main-layout { flex-direction: column; padding: 1.2rem 0.9rem; gap: 1rem; }
+            .sidebar { display: none; }
+            .country-section { scroll-margin-top: 115px; margin-bottom: 3rem; }
+            .country-title { font-size: 1.45rem; }
+            .day-header { padding: 1rem 1rem; }
+            .day-content { padding: 0 1rem 1.2rem; }
+            .info-grid { grid-template-columns: 1fr 1fr; gap: 1rem 0.8rem; }
+            .info-item-main { grid-column: 1 / -1; padding-bottom: 0.6rem; border-bottom: 1px dashed var(--border-color); }
+            /* 手機版畫廊設定：以直式照片為主 */
+            .day-gallery img { height: min(58vh, 420px); width: auto; max-width: 82%; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+
+    <nav class="navbar">
+        <div class="navbar-brand">🌍 EUROPE TREK 2026</div>
+        <div style="font-size:0.82rem;opacity:0.75;">08/13 – 09/25 · 44天</div>
+    </nav>
+
+    <div class="mobile-tabs-container">
+        <div class="mobile-tabs" id="mobileTabs">
+            <a href="#scotland">🏴󠁧󠁢󠁳󠁣󠁴󠁿 蘇格蘭</a>
+            <a href="#iceland">🇮🇸 冰島</a>
+            <a href="#faroe">🇫🇴 法羅群島</a>
+            <a href="#edinburgh">🏙️ 愛丁堡</a>
+            <a href="#ireland">🇮🇪 愛爾蘭</a>
+            <a href="#italy">🇮🇹 多洛米提</a>
+        </div>
+    </div>
+
+    <header class="hero-banner">
+        <div>
+            <h1>2026 歐洲自主健行手冊</h1>
+            <p class="hero-sub">Scotland · Iceland · Faroe Islands · Edinburgh · Ireland · Dolomites</p>
+        </div>
+    </header>
+
+    <main class="main-layout">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <h3>📍 國家行程切換</h3>
+                <ul id="sidebarList">
+                    <li><a href="#scotland">🏴󠁧󠁢󠁳󠁣󠁴󠁿 蘇格蘭高地</a></li>
+                    <li><a href="#iceland">🇮🇸 冰島 Laugavegur</a></li>
+                    <li><a href="#faroe">🇫🇴 法羅群島</a></li>
+                    <li><a href="#edinburgh">🏙️ 愛丁堡</a></li>
+                    <li><a href="#ireland">🇮🇪 愛爾蘭</a></li>
+                    <li><a href="#italy">🇮🇹 義大利多洛米提</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="content-area">
+
+<!-- ========== SCOTLAND ========== -->
+<div id="scotland" class="country-section">
+    <div class="country-header">
+        <div class="country-title-row">
+            <h2 class="country-title">🏴󠁧󠁢󠁳󠁣󠁴󠁿 蘇格蘭 Scotland</h2>
+            <button class="collapse-btn" onclick="collapseAll(this)">⬆ 收合每日行程</button>
+        </div>
+        <div class="trip-tags">
+            <span class="tag"># 08/13 – 08/19</span>
+            <span class="tag"># 7 天</span>
+            <span class="tag tag-highlight"># West Highland Way 高地健行</span>
+        </div>
+    </div>
+
+    <!-- 8/13 -->
+    <div class="day-card active">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D0 ．08/13</span>
+                <span class="day-badge">出發日 · 抵達格拉斯哥</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">TPE ✈ DXB ✈ GLA（Emirates，經杜拜）00:30 出發 / 12:40 抵達格拉斯哥</span>
+                    <span class="info-sub">落地後辦理入住、熟悉市區、採購補給</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">✈ 交通</span>
+                    <span class="info-value">飛機（Emirates via DXB）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Glasgow 市區住宿</span>
+                    <span class="info-sub">取消政策：8/10 前信件取消</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 2,728</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?auto=format&fit=crop&w=800&q=80" alt="Glasgow City" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80" alt="蘇格蘭高地晨霧" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80" alt="蘇格蘭高地山景" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/14 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D1 ．08/14</span>
+                <span class="day-badge">巴士接駁 · Crianlarich</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Glasgow（寄放行李）➔ Loch Lomond ➔ Crianlarich</span>
+                    <span class="info-sub">Citilink 巴士，沿途欣賞洛蒙德湖景，抵達 WHW 起點城鎮</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">巴士（Citilink）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Crianlarich Youth Hostel</span>
+                    <span class="info-sub">取消政策：24小時前信件取消</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,277</span>
+                    <span class="info-sub">≈ 30.25 GBP</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?auto=format&fit=crop&w=800&q=80" alt="Loch Lomond 洛蒙德湖" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/15 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D2 ．08/15</span>
+                <span class="day-badge">高地徒步 · Kingshouse</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Crianlarich ➔ Bridge of Orchy ➔ Kingshouse</span>
+                    <span class="info-sub">穿越 Rannoch Moor 黑石沼澤高原，抵達 Glencoe 入口</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🥾 交通</span>
+                    <span class="info-value">徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Kingshouse Bunk</span>
+                    <span class="info-sub">含早餐 ✓ ／ 不可取消</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 2,279</span>
+                    <span class="info-sub">≈ 54.00 GBP</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1583227122027-d2d360c66d3e?auto=format&fit=crop&w=800&q=80" alt="Rannoch Moor 黑石沼澤" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1597493491082-ad8c882dd84e?auto=format&fit=crop&w=800&q=80" alt="Glencoe 山谷" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/16 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D3 ．08/16</span>
+                <span class="day-badge">高地徒步 · Fort Williams</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Kingshouse ➔ Kinlochleven ➔ Fort Williams（WHW 終點）</span>
+                    <span class="info-sub">Devil's Staircase 著名陡坡段，攻克 West Highland Way 最後一天</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🥾 交通</span>
+                    <span class="info-value">徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Airbnb 或 Glen Nevis Youth Hostel</span>
+                    <span class="info-sub">取消政策：24小時前信件取消</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,688</span>
+                    <span class="info-sub">≈ 40.00 GBP</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/17 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D4 ．08/17</span>
+                <span class="day-badge">Fort Williams 休整</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Fort Williams 市區休整、周邊探索</span>
+                    <span class="info-sub">可搭巴士往 Glen Nevis、補給糧食、整理裝備，準備隔日前往 Corrour</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">巴士（市區）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Fort William Backpackers</span>
+                    <span class="info-sub">取消政策：24小時前取消，收10%手續費</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,266</span>
+                    <span class="info-sub">≈ 30.00 GBP</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/18 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D5 ．08/18</span>
+                <span class="day-badge">往 Corrour 偏遠車站</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Fort Williams ➔ Corrour 火車站（英國最偏遠車站，無公路抵達）</span>
+                    <span class="info-sub">Loch Ossian 湖畔山屋，完全遠離塵囂的絕境體驗</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚂 交通</span>
+                    <span class="info-value">巴士 + 火車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Loch Ossian Youth Hostel</span>
+                    <span class="info-sub">取消政策：24小時前信件取消</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,319</span>
+                    <span class="info-sub">≈ 31.25 GBP</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/19 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D6 ．08/19</span>
+                <span class="day-badge">折返格拉斯哥</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Corrour ➔ 格拉斯哥（取回大行李，準備隔日飛冰島）</span>
+                    <span class="info-sub">搭哈利波特蒸汽火車（Jacobite）沿線回程，格蘭芬南高架橋風景</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚂 交通</span>
+                    <span class="info-value">火車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Glasgow 市區住宿</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 2,467</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <div class="overall-todo">
+        <h4>📋 蘇格蘭行前代辦與建議事項</h4>
+        <ul>
+            <li><strong>機場接駁：</strong>確認 Glasgow 機場來回市區的交通方式與費用（Subway 或 Airport Express Bus）</li>
+            <li><strong>防蟲準備 🦟：</strong>購買 Midge（蘇格蘭小黑蚊）頭套和驅蟲噴霧，高地夏季必備，建議出發前在台灣採購</li>
+            <li><strong>行李寄放：</strong>確認 Glasgow 市區行李寄放位置與費用（往 WHW 需輕裝上陣）</li>
+            <li><strong>交通預訂：</strong>Citilink 往 Loch Lomond / Crianlarich 是否需要提前購票？Fort Williams ↔ Corrour 火車票是否需要事先訂？</li>
+            <li><strong>哈利波特火車 🚂：</strong>確認 Jacobite Steam Train（格蘭芬南高架橋）的時刻表與購票方式</li>
+            <li><strong>搭車方式：</strong>Fort Williams 及沿途城鎮巴士是否支援 Tap On（感應支付）？</li>
+            <li><strong>餐食安排 🍞：</strong>僅 Kingshouse 含早餐，其餘日需自備；確認補給點位置，建議在 Fort Williams 備妥行動糧</li>
+            <li><strong>App 與離線地圖：</strong>下載 OS Maps 或 Komoot 蘇格蘭高地離線地圖</li>
+            <li><strong>現金 vs 刷卡：</strong>確認高地沿途哪些地方只收現金（山屋、農村商店等）</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ========== ICELAND ========== -->
+<div id="iceland" class="country-section">
+    <div class="country-header">
+        <div class="country-title-row">
+            <h2 class="country-title">🇮🇸 冰島 Iceland</h2>
+            <button class="collapse-btn" onclick="collapseAll(this)">⬆ 收合每日行程</button>
+        </div>
+        <div class="trip-tags">
+            <span class="tag"># 08/20 – 08/29</span>
+            <span class="tag"># 10 天</span>
+            <span class="tag tag-highlight"># Laugavegur Trail + Fimmvörðuháls</span>
+        </div>
+    </div>
+
+    <!-- 8/20 -->
+    <div class="day-card active">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D0 ．08/20</span>
+                <span class="day-badge">飛往冰島 · 抵達雷克雅維克</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">格拉斯哥 ➔ 機場 ✈ GLA → KEF 14:20 / 15:45 ➔ Flybus 至市區住宿</span>
+                    <span class="info-sub">抵達後確認山屋裝備清單、兌換冰島克朗現金</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">✈ 交通</span>
+                    <span class="info-value">飛機 + Flybus</span>
+                    <span class="info-sub">Flybus KEF ↔ 市區（4,799 ISK × 來回）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Reykjavík 青年旅館</span>
+                    <span class="info-sub">1 × 4人混合宿舍 ／ 取消：8/18</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,800</span>
+                    <span class="info-sub">≈ 57 USD</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1513220094540-e87a8b27f9b0?auto=format&fit=crop&w=800&q=80" alt="Reykjavík 城市" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1531176175280-33e2e4c1c6e6?auto=format&fit=crop&w=800&q=80" alt="冰島高地彩色山脈" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/21 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D1 ．08/21</span>
+                <span class="day-badge">接駁至 Landmannalaugar</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Reykjavík（寄放行李）➔ Landmannalaugar（Laugavegur 起點）</span>
+                    <span class="info-sub">彩色流紋岩地熱奇景，抵達後可泡天然溫泉熱身</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">Hiker BUS 共乘巴士</span>
+                    <span class="info-sub">≈ 94 EUR（NT$ 3,572）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Landmannalaugar 山屋</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 4,337</span>
+                    <span class="info-sub">≈ 17,000 ISK</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1531176175280-33e2e4c1c6e6?auto=format&fit=crop&w=800&q=80" alt="Landmannalaugar 彩色山脈" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/22 Trail D1 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">Trail D1 ．08/22</span>
+                <span class="day-badge">Laugavegur 第1天</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Landmannalaugar ➔ Hrafntinnusker（11 km ／ 約 4–5 小時）</span>
+                    <span class="info-sub">黑曜石高原、地熱噴氣孔，景觀超凡</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🥾 交通</span>
+                    <span class="info-value">徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Hrafntinnusker 山屋</span>
+                    <span class="info-sub">⚠ 無熱水淋浴</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 4,337</span>
+                    <span class="info-sub">≈ 17,000 ISK</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/23 Trail D2 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">Trail D2 ．08/23</span>
+                <span class="day-badge">Laugavegur 第2天</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Hrafntinnusker ➔ Hvanngil（16 km ／ 約 5 小時）</span>
+                    <span class="info-sub">翠綠山谷漸現，彩色火山渣地形，前一山屋有餐食供應</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🥾 交通</span>
+                    <span class="info-value">徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">⛺ 住宿</span>
+                    <span class="info-value">Hvanngil 營地</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 867</span>
+                    <span class="info-sub">≈ 4,300 ISK</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1539198932588-73e33de71b05?auto=format&fit=crop&w=800&q=80" alt="Laugavegur 翠綠山谷" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/24 Trail D3 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">Trail D3 ．08/24</span>
+                <span class="day-badge">Laugavegur 第3天</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Hvanngil ➔ Emstrur（Botnar）（13 km ／ 約 5 小時）</span>
+                    <span class="info-sub">火山荒原、橫越冰川支流，Þórsmörk 峽谷漸入視野</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🥾 交通</span>
+                    <span class="info-value">徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">⛺ 住宿</span>
+                    <span class="info-value">Emstrur 營地</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 867</span>
+                    <span class="info-sub">≈ 4,300 ISK</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/25 Trail D4 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">Trail D4 ．08/25</span>
+                <span class="day-badge">Laugavegur 第4天 · 抵達Þórsmörk</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Emstrur ➔ Þórsmörk（Langidalur）（16 km ／ 約 5–6 小時）</span>
+                    <span class="info-sub">Laugavegur 官方終點，峽谷森林奇景，抵達後休整補水</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🥾 交通</span>
+                    <span class="info-value">徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Þórsmörk Volcano Hut</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 3,500</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1552083375-1447ce886485?auto=format&fit=crop&w=800&q=80" alt="Þórsmörk 峽谷" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/26 Trail D5 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">Trail D5 ．08/26</span>
+                <span class="day-badge">Fimmvörðuháls 第1天</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Þórsmörk ➔ Baldvinsskáli（13 km ／ 約 4–5 小時）</span>
+                    <span class="info-sub">建議繞行 Valahnuku 山頂觀景，爬上熔岩地帶俯瞰峽谷</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🥾 交通</span>
+                    <span class="info-value">徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Baldvinsskáli 山屋</span>
+                    <span class="info-sub">⚠ 無熱水淋浴</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 4,337</span>
+                    <span class="info-sub">≈ 17,000 ISK</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/27 Trail D6 (B plan main) -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">Trail D6 ．08/27</span>
+                <span class="day-badge">Fimmvörðuháls 第2天 · 下山</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程（B計畫）</span>
+                    <span class="info-value">Baldvinsskáli ➔ Skogar 瀑布步道（12 km ／ 約 4 小時）➔ Bus 52（17:55 / 20:08）往 Skaftafell</span>
+                    <span class="info-sub">沿途經過 Skógafoss 等數條壯觀瀑布，下山後直奔冰河區</span>
+                    <div class="plan-note">A計畫備案：搭 16:30 / 19:23 巴士直接回雷克雅維克</div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🥾 交通</span>
+                    <span class="info-value">徒步 ➔ Bus 52</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">⛺ 住宿</span>
+                    <span class="info-value">Skaftafell 露營地</span>
+                    <span class="info-sub">1 × 10人混合宿舍 ／ 取消：8/25</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,903</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/28 glacier hike -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D8 ．08/28</span>
+                <span class="day-badge">Skaftafell 冰河健行</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程（B計畫）</span>
+                    <span class="info-value">Skaftafell 冰河導覽（09:00 – 14:00）➔ Bus 52（15:14 / 20:30）回雷克雅維克取行李</span>
+                    <div class="plan-note">A計畫備案：雷克雅維克市區休閒，準備隔日法羅群島行程</div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🧊 交通</span>
+                    <span class="info-value">冰河導覽 + Bus 52</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Reykjavík 旅館</span>
+                    <span class="info-sub">1 × 10人混合宿舍 ／ 取消：8/26</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 3,645</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1529963183134-61a90db47eaf?auto=format&fit=crop&w=800&q=80" alt="Skaftafell 冰川健行" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/29 Reykjavik -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D9 ．08/29</span>
+                <span class="day-badge">雷克雅維克市區</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">雷克雅維克自由探索：Hallgrímskirkja 教堂、Harpa 音樂廳、Laugardalslaug 溫泉游泳池</span>
+                    <span class="info-sub">休養生息，準備隔日飛往法羅群島</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚶 交通</span>
+                    <span class="info-value">市區步行</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Reykjavík 旅館（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <div class="overall-todo">
+        <h4>📋 冰島行前代辦與建議事項</h4>
+        <ul>
+            <li><strong>山屋設備確認：</strong>每個山屋設備差異很大，逐一確認是否有：飲用自來水、熱水淋浴、廁所種類、餐廳或販賣機</li>
+            <li><strong>睡眠裝備：</strong>確認各山屋是否提供睡墊與睡袋，或需自備（建議攜帶輕量睡袋）</li>
+            <li><strong>糧食準備 🍱：</strong>備妥 6+ 天乾糧；可攜帶台灣食品（不含肉類與海鮮，符合冰島進口規定）；行動電源帶大容量的</li>
+            <li><strong>現金準備：</strong>部分山屋不接受刷卡，需備足冰島克朗（ISK）現金</li>
+            <li><strong>⚠ 即時氣象追蹤：</strong>出發前必查 <a href="https://safetravel.is" target="_blank">SafeTravel Iceland</a> 與 <a href="https://en.vedur.is" target="_blank">冰島氣象局 vedur.is</a>，高山氣候瞬息萬變</li>
+            <li><strong>App 確認：</strong>下載冰島天氣 App 及 Strætó（巴士）App，抵達當日測試可用性</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ========== FAROE ========== -->
+<div id="faroe" class="country-section">
+    <div class="country-header">
+        <div class="country-title-row">
+            <h2 class="country-title">🇫🇴 法羅群島 Faroe Islands</h2>
+            <button class="collapse-btn" onclick="collapseAll(this)">⬆ 收合每日行程</button>
+        </div>
+        <div class="trip-tags">
+            <span class="tag"># 08/30 – 09/07</span>
+            <span class="tag"># 9 天</span>
+            <span class="tag tag-highlight"># 島嶼健行 + 絕景秘境</span>
+        </div>
+    </div>
+
+    <!-- 8/30 -->
+    <div class="day-card active">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D0 ．08/30</span>
+                <span class="day-badge">飛往法羅群島</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Reykjavík ✈ KEF → FAE 10:35 / 13:25 ➔ 抵達 Tórshavn</span>
+                    <span class="info-sub">入住 Airbnb，辦理交通 7 日卡，踩點碼頭老城區</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">✈ 交通</span>
+                    <span class="info-value">Flybus + 飛機（Atlantic Airways）</span>
+                    <span class="info-sub">≈ NT$ 7,056（DKK 1,248）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Tórshavn Airbnb</span>
+                    <span class="info-sub">取消政策：8/15 下午 3:00 前</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 18,800</span>
+                    <span class="info-sub">整段法羅住宿（8/30–9/7，約 9 晚）</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1508193638397-1c4234db14d8?auto=format&fit=crop&w=800&q=80" alt="法羅群島彩色小屋" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=800&q=80" alt="Tórshavn 港口" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1566154799966-3d4a342db7e4?auto=format&fit=crop&w=800&q=80" alt="法羅群島懸崖" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 8/31 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D1 ．08/31</span>
+                <span class="day-badge">本島中央健行</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Streymoy 本島中央路線健行 ➔ 回碼頭</span>
+                    <span class="info-sub">熟悉島上交通系統，輕鬆暖身路線</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車 7日票</span>
+                    <span class="info-sub">現場購 DKK 700 ／ 單程 DKK 90 可 Tap On</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Tórshavn Airbnb（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/1 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D2 ．09/01</span>
+                <span class="day-badge">海上懸湖 + 米金島渡輪</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">機場島（Vágar）➔ 海上懸湖 Sørvágsvatn ➔ 渡輪往返 Mykines（米金島）</span>
+                    <span class="info-sub">Sørvágsvatn 是法羅最著名打卡地；Mykines 有密集的 Puffin 角嘴海雀群落</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車 + 渡輪</span>
+                    <span class="info-sub">⚠ Mykines 渡輪需提前預訂</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Tórshavn Airbnb（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/2 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D3 ．09/02</span>
+                <span class="day-badge">Klakkur + 007島（Kalsoy）</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">北島 Borðoy：Klaksvík 登 Klakkur 山頂 ➔ 渡輪往 Kalsoy（007島）</span>
+                    <span class="info-sub">Klakkur 俯瞰克拉斯維克漁港；Kalsoy 是 James Bond《No Time to Die》外景地</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車 + 渡輪</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Tórshavn Airbnb（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/3 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D4 ．09/03</span>
+                <span class="day-badge">本島北端 · 刀鋒山稜線</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Tjørnuvík 黑砂灘 ➔ 刀鋒山 Enniberg 稜線縱走</span>
+                    <span class="info-sub">Tjørnuvík 海灘有傳說中的巨人礁石 Risin og Kellingin；刀鋒山稜線俯瞰北大西洋</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Tórshavn Airbnb（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/4 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D5 ．09/04</span>
+                <span class="day-badge">Eysturoy 東島縱走</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Eysturoy 東島：Eiðisvatn 湖 ➔ Funningur 村 ➔ Gjógv（天然峽谷港口）</span>
+                    <span class="info-sub">Gjógv 是法羅最美小村之一，岩縫天然港口與彩色草皮屋令人驚嘆</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車 + 徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Tórshavn Airbnb（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/5 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D6 ．09/05</span>
+                <span class="day-badge">Tórshavn 市區觀光</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Tórshavn 市區：彩色草皮屋頂舊城區 Tinganes、Nordic House 文化中心、海港市集</span>
+                    <span class="info-sub">法羅群島首都，世界最小的首都之一，悠閒散步半天足夠</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚶 交通</span>
+                    <span class="info-value">步行</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Tórshavn Airbnb（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/6 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D7 ．09/06</span>
+                <span class="day-badge">彈性備用日</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">預備日：補充前幾天未完成的路線、天氣差時的備案、整理行李準備前往愛丁堡</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚶 交通</span>
+                    <span class="info-value">彈性安排</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Tórshavn Airbnb（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/7 Faroe departure -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D8 ．09/07</span>
+                <span class="day-badge">飛往愛丁堡</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">放空上午 ✈ FAE → EDI 15:00 / 16:25 ➔ 抵達愛丁堡</span>
+                    <span class="info-sub">抵達後直接入住 Youth Hostel，Royal Mile 夜晚散步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">✈ 交通</span>
+                    <span class="info-value">飛機</span>
+                    <span class="info-sub">≈ DKK 1,248（NT$ 6,065）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Edinburgh Youth Hostel</span>
+                    <span class="info-sub">取消政策：9/6 前</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,350</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <div class="overall-todo">
+        <h4>📋 法羅群島行前代辦與建議事項</h4>
+        <ul>
+            <li><strong>交通票購買：</strong>巴士 7 日票（DKK 700）需在法羅群島當地購買，無法線上預購；單程票 DKK 90 可 Tap On 刷卡</li>
+            <li><strong>⚠ 渡輪預訂：</strong>前往 Mykines（米金島）的渡輪座位有限，夏季常滿，需提前在官網預訂</li>
+            <li><strong>天氣應變：</strong>法羅天氣變化極快，每天出門前確認預報，防水外套是必需品</li>
+            <li><strong>Sørvágsvatn 路線：</strong>現行需購票參加導覽（約 DKK 400），確認最新開放規定</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ========== EDINBURGH ========== -->
+<div id="edinburgh" class="country-section">
+    <div class="country-header">
+        <div class="country-title-row">
+            <h2 class="country-title">🏙️ 愛丁堡 Edinburgh</h2>
+            <button class="collapse-btn" onclick="collapseAll(this)">⬆ 收合每日行程</button>
+        </div>
+        <div class="trip-tags">
+            <span class="tag"># 09/07 – 09/10</span>
+            <span class="tag"># 4 天</span>
+            <span class="tag tag-highlight"># 城市探索 · 大大相聚</span>
+        </div>
+    </div>
+
+    <!-- 9/7 Edinburgh arrival -->
+    <div class="day-card active">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D0 ．09/07</span>
+                <span class="day-badge">抵達愛丁堡</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">16:25 抵達愛丁堡機場 ➔ Airlink 100 巴士進市區 ➔ 入住 YHA ➔ Royal Mile 夜晚散步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">機場巴士 Airlink 100</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Edinburgh Youth Hostel</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,350</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?auto=format&fit=crop&w=800&q=80" alt="Edinburgh Castle 愛丁堡城堡" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=800&q=80" alt="愛丁堡舊城區俯瞰" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/8 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D1 ．09/08</span>
+                <span class="day-badge">大大抵達 · 吃喝玩樂</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">大大 09:00 抵達 ➔ 一起吃喝玩樂：Edinburgh Castle、Grassmarket、Arthur's Seat、Whisky 試飲</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚶 交通</span>
+                    <span class="info-value">步行 + 路面電車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Edinburgh Airbnb</span>
+                    <span class="info-sub">取消政策：9/2 前</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 7,500</span>
+                    <span class="info-sub">含 9/8 – 9/9 兩晚</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/9 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D2 ．09/09</span>
+                <span class="day-badge">悠閒市區探索</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Scottish National Gallery、Dean Village 田園小區、Leith Walk 文青市場、The Scotch Whisky Experience</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚶 交通</span>
+                    <span class="info-value">步行</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Edinburgh Airbnb（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/10 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D3 ．09/10</span>
+                <span class="day-badge">飛往都柏林</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">早晨最後巡遊 ✈ EDI → DUB 15:00 / 16:05 ➔ 抵達都柏林，入住大大家</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">✈ 交通</span>
+                    <span class="info-value">飛機</span>
+                    <span class="info-sub">≈ €57.7（NT$ 2,193）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">大大家（友人招待）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 0 🎉</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+</div>
+
+<!-- ========== IRELAND ========== -->
+<div id="ireland" class="country-section">
+    <div class="country-header">
+        <div class="country-title-row">
+            <h2 class="country-title">🇮🇪 愛爾蘭 Ireland</h2>
+            <button class="collapse-btn" onclick="collapseAll(this)">⬆ 收合每日行程</button>
+        </div>
+        <div class="trip-tags">
+            <span class="tag"># 09/10 – 09/13</span>
+            <span class="tag"># 4 天</span>
+            <span class="tag tag-highlight"># 租車環島 · 翠綠愛爾蘭</span>
+        </div>
+    </div>
+
+    <!-- 9/10 -->
+    <div class="day-card active">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D0 ．09/10</span>
+                <span class="day-badge">抵達都柏林</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">16:05 抵達都柏林 ➔ 取車 ➔ 入住大大家 ➔ 晚餐相聚</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚗 交通</span>
+                    <span class="info-value">租車（自駕）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">大大家（友人招待）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 0 🎉</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1541873676-a18131494184?auto=format&fit=crop&w=800&q=80" alt="都柏林市區" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1518469669741-7484615cccce?auto=format&fit=crop&w=800&q=80" alt="愛爾蘭翠綠山丘" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/11 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D1 ．09/11</span>
+                <span class="day-badge">都柏林城市探索（建議）</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程（建議參考）</span>
+                    <span class="info-value">Guinness Storehouse 黑啤博物館 ➔ Temple Bar 文化區 ➔ Kilmainham Gaol 歷史監獄 ➔ Phoenix Park 散步</span>
+                    <span class="info-sub">均在市區內，步行或開車皆可抵達</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚗 交通</span>
+                    <span class="info-value">租車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">大大家（友人招待）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 0 🎉</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/12 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D2 ．09/12</span>
+                <span class="day-badge">西部一日遊（建議）</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程（建議參考）</span>
+                    <span class="info-value">Glendalough 修道院遺址（都柏林南1小時）或 Cliffs of Moher 莫赫懸崖（西部，全天）</span>
+                    <span class="info-sub">Glendalough 適合半日放鬆；Cliffs of Moher 路程長但壯觀，有租車最適合</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚗 交通</span>
+                    <span class="info-value">租車自駕</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">大大家（友人招待）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 0 🎉</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1564679606461-5abb6f803b04?auto=format&fit=crop&w=800&q=80" alt="Cliffs of Moher 莫赫懸崖" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/13 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D3 ．09/13</span>
+                <span class="day-badge">飛往威尼斯</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">還車 ➔ Dublin Airport ✈ DUB → VCE 20:15 / 23:55 ➔ 深夜抵達威尼斯</span>
+                    <span class="info-sub">⚠ 需提前通知 Venice Camping Rialto 深夜 check-in（需繳剩餘費用現場）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">✈ 交通</span>
+                    <span class="info-value">飛機</span>
+                    <span class="info-sub">≈ €89.60（NT$ 3,405）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏕 住宿</span>
+                    <span class="info-value">Venice Camping Rialto Village</span>
+                    <span class="info-sub">簡易雙床房，公共衛浴</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,368</span>
+                    <span class="info-sub">≈ €36.00（已付 €5.40）</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+</div>
+
+<!-- ========== ITALY DOLOMITES ========== -->
+<div id="italy" class="country-section">
+    <div class="country-header">
+        <div class="country-title-row">
+            <h2 class="country-title">🇮🇹 義大利多洛米提 Dolomites</h2>
+            <button class="collapse-btn" onclick="collapseAll(this)">⬆ 收合每日行程</button>
+        </div>
+        <div class="trip-tags">
+            <span class="tag"># 09/13 – 09/25</span>
+            <span class="tag"># 13 天</span>
+            <span class="tag tag-highlight"># Alta Via 高山徒步 · Rifugio 山屋體驗</span>
+        </div>
+    </div>
+
+    <!-- 9/13 -->
+    <div class="day-card active">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D0 ．09/13</span>
+                <span class="day-badge">深夜抵達威尼斯</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">23:55 抵達 Marco Polo 機場 ➔ 機場巴士或水上巴士至 Venice Camping Rialto</span>
+                    <span class="info-sub">夜晚辦理入住休息，明日下午搭巴士前往多洛米提</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">機場巴士 / 水上巴士</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏕 住宿</span>
+                    <span class="info-value">Venice Camping Rialto Village</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 1,368</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=80" alt="多洛米提 Tre Cime 三峰山" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&w=800&q=80" alt="Val Gardena 加爾代納谷" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?auto=format&fit=crop&w=800&q=80" alt="多洛米提日落" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/14 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D1 ．09/14</span>
+                <span class="day-badge">往 Dobbiaco</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">14:20 / 17:38 Venice ➔ Dobbiaco（Cortina Express 快巴）</span>
+                    <span class="info-sub">早晨可在威尼斯本島快速觀光後搭巴士進山</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">Cortina Express 巴士</span>
+                    <span class="info-sub">≈ €33.5（NT$ 1,273）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Dobbiaco Youth Hostel</span>
+                    <span class="info-sub">3人女性宿舍（1床）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 2,432</span>
+                    <span class="info-sub">≈ €64.00（含 9/14–9/15 兩晚）</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/15 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D2 ．09/15</span>
+                <span class="day-badge">Rifugio Nuvolau + Cinque Torri</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">公車至 Passo di Giau ➔ Rifugio Nuvolau（多洛米提最古老山屋）➔ Cinque Torri（五塔岩）</span>
+                    <span class="info-sub">從山屋遠眺 Pelmo、Civetta 群峰全景，傍晚回 Dobbiaco</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車 + 徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Dobbiaco Youth Hostel（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/16 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D3 ．09/16</span>
+                <span class="day-badge">Locatelli 山屋（Tre Cime 正對面）</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Val Fiscalina Corda ➔ Rifugio Locatelli（Tre Cime 三峰山最佳觀景地）</span>
+                    <span class="info-sub">日出日落從山屋窗戶直看三峰山，住一晚絕對值回票價</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車 + 徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Rifugio Locatelli</span>
+                    <span class="info-sub">Half board（含早晚餐）／ 宿舍1號床位（外部建築）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 3,040</span>
+                    <span class="info-sub">≈ €80.00（已付 €40）</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?auto=format&fit=crop&w=800&q=80" alt="Tre Cime di Lavaredo 三峰山" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/17 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D4 ．09/17</span>
+                <span class="day-badge">Locatelli → Misurina → Dobbiaco</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Locatelli ➔ Auronzo ➔ Cadini di Misurina 瞭望台 ➔ Lago di Misurina 湖 ➔ 回 Dobbiaco</span>
+                    <span class="info-sub">Cadini di Misurina 是多洛米提最上鏡的稜線之一，搭配 Tre Cime 背景令人動容</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Dobbiaco Guesthouse</span>
+                    <span class="info-sub">雙人房含早餐</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 4,119</span>
+                    <span class="info-sub">≈ €108.40</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/18 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D5 ．09/18</span>
+                <span class="day-badge">移動至 Ortisei（Val Gardena）</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Dobbiaco ➔ Ortisei（Val Gardena 加爾代納谷入口）</span>
+                    <span class="info-sub">Ortisei 是 Alta Via 2 核心據點，以木雕工藝聞名，纜車系統完善</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚂 交通</span>
+                    <span class="info-value">火車 + 公車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Ortisei Madonna Guesthouse</span>
+                    <span class="info-sub">單人房含早晚餐（9/18 – 9/20，共3晚）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 12,008</span>
+                    <span class="info-sub">≈ €300.00（已付 €100）3晚含早晚餐</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/19 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D6 ．09/19</span>
+                <span class="day-badge">Rasciesa + Alpe di Siusi</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Rasciesa 高原（纜車上）➔ Alpe di Siusi（Seiser Alm，歐洲最大高山牧場）</span>
+                    <span class="info-sub">晴天可見 Langkofel 薩索朗格全景倒映草原，牧場花海</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚡 交通</span>
+                    <span class="info-value">纜車 + 公車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Ortisei Madonna Guesthouse（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1571771019784-3ff35f4f4277?auto=format&fit=crop&w=800&q=80" alt="Alpe di Siusi 高山牧場" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/20 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D7 ．09/20</span>
+                <span class="day-badge">Sassolungo 環山步道</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Sassolungo / Langkofel 薩索朗格環山步道</span>
+                    <span class="info-sub">多洛米提最具代表性的花崗岩巨峰，環繞步道約 5–6 小時，沿途視野壯觀</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚡 交通</span>
+                    <span class="info-value">纜車 + 公車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Ortisei Madonna Guesthouse（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/21 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D8 ．09/21</span>
+                <span class="day-badge">Santnerpass 山屋 · Via Ferrata TBC</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">公車至 Vigo di Fassa ➔ Santnerpass（含 Via Ferrata 鐵索攀登段，TBC）</span>
+                    <span class="info-sub">⚠ 鐵索攀登需安全吊帶 + 頭盔，建議確認路線開放狀態與個人技術後再決定</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">公車 + 徒步</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏠 住宿</span>
+                    <span class="info-value">Santnerpass Mountain Hut</span>
+                    <span class="info-sub">Share room 含早晚餐</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 3,990</span>
+                    <span class="info-sub">≈ €105.00（已付 €50）</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/22 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D9 ．09/22</span>
+                <span class="day-badge">Santnerpass → Alpe di Siusi</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Santnerpass ➔ Tierser-Alpl-Hütte ➔ Alpe di Siusi ➔ St. Christina</span>
+                    <span class="info-sub">翻越山屋連線路段，穿越 Val Gardena 深處，抵達小鎮 St. Christina</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚌 交通</span>
+                    <span class="info-value">徒步 + 公車</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">St. Christina 旅館</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 5,000</span>
+                    <span class="info-sub">含 9/22 – 9/23 兩晚</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/23 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D10 ．09/23</span>
+                <span class="day-badge">Col Raiser → Seceda 稜線</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">Col Raiser ➔ Seceda（Val Gardena 最標誌性鋸齒稜線）</span>
+                    <span class="info-sub">Seceda 的鋸齒形 Geisler 岩峰稜線是多洛米提 Instagram 最多人打卡地標</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚡 交通</span>
+                    <span class="info-value">纜車 + 步行</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">St. Christina 旅館（同上）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 花費</span>
+                    <span class="info-value cost">—</span>
+                </div>
+            </div>
+            <div class="day-gallery">
+                <img src="https://images.unsplash.com/photo-1571771019784-3ff35f4f4277?auto=format&fit=crop&w=800&q=80" alt="Seceda 鋸齒稜線" loading="lazy">
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/24 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D11 ．09/24</span>
+                <span class="day-badge">前往米蘭</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">13:12 / 16:05 Bolzano ➔ Milan（Omio 訂票）</span>
+                    <span class="info-sub">抵達米蘭享用豐盛晚餐犒賞自己 🍝，最後一晚好好放鬆</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🚂 交通</span>
+                    <span class="info-value">火車</span>
+                    <span class="info-sub">≈ €16.26（NT$ 392）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏨 住宿</span>
+                    <span class="info-value">Milan Ostello Bello Grande</span>
+                    <span class="info-sub">6人女性宿舍，獨立衛浴，含早餐</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">💰 住宿費</span>
+                    <span class="info-value cost">NT$ 3,062</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 9/25 -->
+    <div class="day-card">
+        <div class="day-header" onclick="toggleAccordion(this)">
+            <div class="day-header-left">
+                <span class="day-date">D12 ．09/25</span>
+                <span class="day-badge">🏠 返台</span>
+            </div>
+            <span class="toggle-arrow">▼</span>
+        </div>
+        <div class="day-content"><div class="day-content-inner">
+            <div class="info-grid">
+                <div class="info-item info-item-main">
+                    <span class="info-label">🗺 行程</span>
+                    <span class="info-value">前往 Malpensa 機場 ✈ 返回台灣 🎉</span>
+                    <span class="info-sub">44 天、6 個國家、數不清的山頭——歐洲自主健行圓滿結束！</span>
+                </div>
+                <div class="info-item"><span class="info-label">✈ 交通</span><span class="info-value">飛機（返台）</span></div>
+                <div class="info-item"><span class="info-label">🏠 住宿</span><span class="info-value">Home 💚</span></div>
+                <div class="info-item"><span class="info-label">💰 花費</span><span class="info-value cost">—</span></div>
+            </div>
+        </div></div>
+    </div>
+
+    <div class="overall-todo">
+        <h4>📋 義大利多洛米提行前代辦與建議事項</h4>
+        <ul>
+            <li><strong>Via Ferrata 裝備：</strong>Santnerpass 路線含鐵索攀登段（TBC），需確認開放狀態；自備或租用安全吊帶 + 頭盔</li>
+            <li><strong>山屋含餐確認：</strong>Locatelli、Santnerpass 均為 Half Board（含早晚餐）；Ortisei 含早晚餐，確認餐時</li>
+            <li><strong>Cortina Express 預訂：</strong>威尼斯往 Dobbiaco 的巴士旺季常滿，需提前在官網購票</li>
+            <li><strong>Val Gardena Card：</strong>考慮購買 Ortisei 段纜車 + 公車通票，多天使用更划算</li>
+            <li><strong>St. Christina 住宿：</strong>9/22–9/23 住宿細節待確認（房型 / 是否含餐）</li>
+        </ul>
+    </div>
+</div>
+
+        </section>
+    </main>
+</div>
+
+<script>
+    function toggleAccordion(header) {
+        header.parentElement.classList.toggle('active');
+    }
+
+    function collapseAll(btn) {
+        btn.closest('.country-section').querySelectorAll('.day-card.active').forEach(c => c.classList.remove('active'));
+    }
+
+    // Scroll-based active state for sidebar + mobile tabs
+    const sections = document.querySelectorAll('.country-section');
+    const sideLinks = document.querySelectorAll('#sidebarList a');
+    const mobLinks  = document.querySelectorAll('#mobileTabs a');
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = '#' + entry.target.id;
+                sideLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+                mobLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+                const activeTab = document.querySelector('#mobileTabs a[href="' + id + '"]');
+                if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
